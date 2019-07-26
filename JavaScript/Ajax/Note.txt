@@ -1,0 +1,13 @@
++ Ajax là 1 kỹ thuật - Asynchronous JavaScript and XML
++ Giúp web động, mà không cần load lại trang
++ Trên môi trường local:
+    + khi tạo 1 request ajax sẽ bị lỗi 'null cross orign'
+    + Khắc phục bằng cách, tạo 1 IIS server để chạy đc http
+    + Cấu hình static trong Handler Mappings, để lấy GET or POST
+    + Đối với GET có thể dùng file document(.txt, html,...) và file program(.php,.py,...)
+    + Còn với POST thì chỉ có thể dùng file program(.php,.py,...)
+    + Để chạy được file php, cần cấu hình php:
+    https://support.microsoft.com/vi-vn/help/2819022/how-to-install-and-configure-php-on-iis-8-in-windows-8
+    + Để thêm or bớt module để php cần sử dụng tại path
+    C:\Program Files\iis express\PHP\v7.3\php.ini
+    + Kiểm tra các module đang hiện hành bằng cmd: php -m
