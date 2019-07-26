@@ -1,0 +1,88 @@
+/*Body*/
+body{
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
+/*Table*/
+#table-list{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#table-list td, #table-list th{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#table-list tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+#table-list tr:hover{
+    background-color: #ddd;
+}
+
+#table-list th{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background: #4CAF50;
+    color: white;
+}
+
+/*Form*/
+.form-common{
+    background-color: white;
+    padding: 4px;
+    margin: 2px;
+    width: 400px;
+    height: 200px;
+}
+
+/*Input*/
+input[type=text]{
+    padding: 10px 2px;
+    margin: 10px;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    outline: none;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+input[type=text]:focus{
+    border: 1px solid lightblue;
+}
+
+input[type=submit], input[type=button], a.pagination{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+input[type=submit]:hover, input[type=button]:hover, a.pagination:hover {
+    background-color: lightgreen;
+}
+
+.pagination {
+    float: right;
+}
+/*Label*/
+label{
+    display: inline-block;
+}
+
+label.error {
+    display: inline-block;
+    color:red;
+}
+
+input[type=text].error{
+    border: 1px solid red;
+}

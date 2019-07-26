@@ -1,0 +1,351 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="/javascript/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="/javascript/main.js"></script>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+        <script type="text/javascript">
+
+            function initializeDialogNotication(info){
+                $('.dialog-notification').dialog({
+                    autoOpen: false,
+                    title: info,
+                    width: 50,
+                    height: 50,
+                    buttons:[
+                        {
+                            text: 'OK',
+                            click: function(){
+                                $(this).dialog('close');
+                            }
+                        }
+                    ]
+                });
+            }
+
+            /*START FUNCTION FORMAT DATE TIME*/
+            function formatDate(date){
+                var datePart = date.split(/\D/g);
+                return [datePart[2],datePart[1],datePart[0]].join("/");
+            }
+            /*END FUNCTION FORMAT DATE TIME*/
+
+            /*START FUNCTION PAGINATION BOOK*/
+            function pagination(url_previous, url_next) {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/',
+                    data: {
+                        'data': 'json',
+                        'next_cursor': url_next,
+                        'previous_cursor': url_previous
+                    },
+                    success: function (result) {
+                        console.log(result);
+
+                        var next_cursor = result['next_cursor'];
+                        var previous_cursor = result['previous_cursor'];
+
+                        var html = '';
+                            html += '<table id="table-list">';
+                                html += '<tr>';
+                                    html += '<th style="display:none;">Id</th>';
+                                    html += '<th>Name</th>';
+                                    html += '<th>Type</th>';
+                                    html += '<th>Date</th>';
+                                    html += '<th colspan="2">Action</th>';
+                                html += '</tr>';
+                        for(var i = 0; i < result['items_book'].length; i++) {
+                                html += '<tr>';
+                                    html += '<td style="display:none;">' + result['items_book'][i]['Id'] + '</td>';
+                                    html += '<td>' + result['items_book'][i]['Name'] + '</td>';
+                                    html += '<td>' + result['items_book'][i]['Type'] + '</td>';
+                                    html += '<td>' + formatDate(result['items_book'][i]['Date']) + '</td>';
+                                    html += '<td><input name="dialog-update" class="dialog-update" type="button" value="Update"></td>';
+                                    html += '<td><input name="dialog-delete" class="dialog-delete" type="button" value="Delete"></td>';
+                                html += '</tr>';
+                        }
+                            html += '</table>';
+                            html += '<p>';
+                                html += '<span style="margin:20px;"></span>';
+                            if (result['next']) {
+                                html += '<a href="#" onclick="pagination(' + "'','" + next_cursor +"'" + ')" class="pagination">' + 'Next >' + '</a>';
+                            }
+                                html += '<span style="margin:20px;"></span>';
+                            if (result['prev']) {
+                                html += '<a href="#" onclick="pagination(' + "'" + previous_cursor + "',''" + ')" class="pagination">' + '< Prev' + '</a>';
+                            }
+                            html += '</p>';
+                            $('#list').html(html);
+                    }
+                });
+            }
+            /*END FUNCTION PAGINATION BOOK*/
+
+            /*START FUNCTION LOAD BOOK*/
+            function load_data(){
+
+                $('#data-list').ready(function(){
+                    $.ajax({
+                        type:'GET',
+                        url:'/',
+                        data:{'data': 'json'},
+                        success:function(result){
+                            console.log(result);
+
+                            var next_cursor = result['next_cursor'];
+                            var previous_cursor = result['previous_cursor'];
+
+                            var html = '';
+                                html += '<table id="table-list">';
+                                    html += '<tr>';
+                                        html += '<th style="display:none;">Id</th>';
+                                        html += '<th>Name</th>';
+                                        html += '<th>Type</th>';
+                                        html += '<th>Date</th>';
+                                        html += '<th colspan="2">Action</th>';
+                                    html += '</tr>';
+                            for(var i = 0; i < result['items_book'].length; i++) {
+                                    html += '<tr>';
+                                        html += '<td style="display:none;">' + result['items_book'][i]['Id'] + '</td>';
+                                        html += '<td>' + result['items_book'][i]['Name'] + '</td>';
+                                        html += '<td>' + result['items_book'][i]['Type'] + '</td>';
+                                        html += '<td>' + formatDate(result['items_book'][i]['Date']) + '</td>';
+                                        html += '<td><input name="dialog-update" class="dialog-update" type="button" value="Update"></td>';
+                                        html += '<td><input name="dialog-delete" class="dialog-delete" type="button" value="Delete"></td>';
+                                    html += '</tr>';
+                            }
+                                html += '</table>';
+                                html += '<p>';
+                                    html += '<span style="margin:20px;"></span>';
+                                if (result['next']) {
+                                    html += '<a href="#" onclick="pagination(' + "'','" + next_cursor +"'" + ')" class="pagination">' + 'Next >' + '</a>';
+                                }
+                                    html += '<span style="margin:20px;"></span>';
+                                if (result['prev']) {
+                                    html += '<a href="#" onclick="pagination(' + "'" + previous_cursor + "',''" + ')" class="pagination">' + '< Prev' + '</a>';
+                                }
+                                html += '</p>';
+                                $('#list').html(html);
+                        }
+                    });
+                });
+            }
+            /*END FUNCTION LOAD BOOK*/
+
+            $(document).ready(function(){
+
+                /*START LIST BOOK*/
+                load_data();
+                /*END LIST BOOK*/
+
+                /*START DIALOG CREATE BOOK*/
+                function initializeCreateDialog(){
+                    $('#dialogCreate').dialog({
+                        autoOpen: false,
+                        title:'Create Book',
+                        width: 500,
+                        height: 350
+                    });
+                }
+
+                $('#dialog-create').click(function(){
+                    initializeCreateDialog();
+                    $('#dialogCreate').dialog('open');
+                    return false;
+                });
+
+                $('#create').on('submit', function(e){
+                    e.preventDefault();
+
+                    var book_name = $('#book_name').val();
+                    var book_type = $('#book_type').val();
+                    var book_date = $('#book_date').val();
+
+                    if(book_name == '' || book_type == '' || book_date == ''){
+                        return false;
+                    }
+
+                    var list = $('#list');
+                    var form = $('form').find('input[type="text"]');
+                    var dialog = $('#dialogCreate');
+
+                    $.ajax({
+                       type: 'POST',
+                        url: '/create/',
+                        data: {
+                            'book_name': book_name,
+                            'book_type': book_type,
+                            'book_date': book_date
+                        },
+                        success:function(result){
+                            alert('Create successfully');
+                            list.load('#data-list');
+                            form.val('');
+                            dialog.dialog('close');
+                        }
+                    });
+                    return false;
+                });
+                /*END DIALOG CREATE BOOK*/
+
+                /*START DIALOG UPDATE BOOK*/
+                function initializeUpdateDialog(){
+                    $('.dialogUpdate').dialog({
+                        autoOpen: false,
+                        title:'Update Book',
+                        width: 500,
+                        height: 350
+                    });
+                }
+
+                $('body').on('click','.dialog-update',function(){
+                    initializeUpdateDialog();
+                    $('.dialogUpdate').dialog('open');
+
+                    var update_book_id = $(this).parents('tr').find("td:eq(0)").text();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/update/',
+                        data:{
+                            'update_book_id': update_book_id,
+                        },
+                        success:function(result){
+                            $('#update_book_id').val(result[0]['Id']);
+                            $('#update_book_name').val(result[0]['Name']);
+                            $('#update_book_type').val(result[0]['Type']);
+                            $('#update_book_date').val(formatDate(result[0]['Date']));
+                        }
+                    });
+                });
+
+                $('#update').on('submit', function(e){
+                    e.preventDefault();
+
+                    var update_book_name = $('#update_book_name').val();
+                    var update_book_type = $('#update_book_type').val();
+                    var update_book_date = $('#update_book_date').val();
+
+                    if(update_book_name == '' || update_book_type == '' || update_book_date == ''){
+                        return false;
+                    }
+
+                    var list = $('#list');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/update/',
+                        data:{
+                            'update_book_id': $('#update_book_id').val(),
+                            'update_book_name': update_book_name,
+                            'update_book_type': update_book_type,
+                            'update_book_date': update_book_date
+                        },
+                        success:function(result){
+                            alert('Update successfully');
+                            list.load('#data-list');
+                            $('.dialogUpdate').dialog('close');
+                        }
+                    });
+                });
+                /*END DIALOG UPDATE BOOK*/
+
+                /*START DIALOG DELETE BOOK*/
+                function initializeDeleteDialog(){
+                    $('.dialogDelete').dialog({
+                        autoOpen: false,
+                        title:'Delete Book',
+                        width: 500,
+                        height: 350
+                    });
+                }
+
+                $('body').on('click','.dialog-delete',function(){
+                    initializeDeleteDialog();
+                    $('.dialogDelete').dialog('open');
+
+                    var delete_book_id = $(this).parents('tr').find("td:eq(0)").text();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/delete/',
+                        data:{
+                            'delete_book_id': delete_book_id,
+                        },
+                        success:function(result){
+                            $('#delete_book_id').val(result[0]['Id']);
+                            $('#delete_book_name').val(result[0]['Name']);
+                            $('#delete_book_type').val(result[0]['Type']);
+                            $('#delete_book_date').val(formatDate(result[0]['Date']));
+                        }
+                    });
+                });
+
+                $('#delete').on('submit', function(e){
+                    e.preventDefault();
+                    var list = $('#list');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/delete/',
+                        data:{
+                            'delete_book_id': $('#delete_book_id').val(),
+                        },
+                        success:function(result){
+                            alert('Delete successfully');
+                            list.load('#data-list');
+                            $('.dialogDelete').dialog('close');
+                        }
+                    });
+                });
+                /*END DIALOG DELETE BOOK*/
+
+            });
+
+				
+        </script>
+    </head>
+    <body>
+        <div id="data-list">
+            <div id="list"></div>
+        </div>
+
+        <div id="dialogCreate" style="display: none;">
+            <form method="post" id="create" action="/" class="form-common" />
+                <input type="text" value="" id="book_name" name="Book_Name" placeholder="Book Name" required /><br/>
+                <input type="text" value="" id="book_type" name="Book_Type" placeholder="Book Type" required /><br/>
+                <input type="text" value="" id="book_date" name="Book_Date" placeholder="Book Date" class="datepicker" required /><br/>
+                <input type="submit" value="Create">
+            </form>
+        </div>
+        <input value="Create" type="button" id="dialog-create"/>
+
+        <div class="dialogUpdate" style="display: none;">
+            <form method="post" id="update" action="/" class="form-common" />
+                <input type="text" value="" id="update_book_id" name="Book_Id" placeholder="Book Id" disabled/><br/>
+                <input type="text" value="" id="update_book_name" name="Book_Name" placeholder="Book Name" required /><br/>
+                <input type="text" value="" id="update_book_type" name="Book_Type" placeholder="Book Type" required /><br/>
+                <input type="text" value="" id="update_book_date" name="Book_Date" placeholder="Book Date" class="datepicker" required /><br/>
+                <input type="submit" value="Update">
+            </form>
+        </div>
+
+        <div class="dialogDelete" style="display: none;">
+            <form method="post" id="delete" action="/" class="form-common form-page" />
+                <input type="text" value="" id="delete_book_id" name="Book_Id" placeholder="Book Id" disabled /><br/>
+                <input type="text" value="" id="delete_book_name" name="Book_Name" placeholder="Book Name" disabled /><br/>
+                <input type="text" value="" id="delete_book_type" name="Book_Type" placeholder="Book Type" disabled /><br/>
+                <input type="text" value="" id="delete_book_date" name="Book_Date" placeholder="Book Date" disabled/><br/>
+                <input type="submit" value="Delete">
+            </form>
+        </div>
+
+        <div class="dialog-notification"></div>
+
+    </body>
+</html>
+
