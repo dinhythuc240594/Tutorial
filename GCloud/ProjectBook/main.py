@@ -109,9 +109,27 @@ class FormDelete(webapp2.RequestHandler):
         if book:
             book.key.delete()
 
+
+class FormSearch(webapp2.RequestHandler):
+    def get(self):
+        if self.request.get('data') == 'json':
+            self.response.headers['Content-Type'] = 'text/json'
+            key_word = self.request.get('key_word')
+            data = Book.query(ndb.OR(Book.Name == key_word,
+                                     Book.Type == key_word))
+            logging.info(data)
+
+            items = json.dumps([book.to_dict() for book in data.fetch()], default=str)
+            logging.info(items)
+
+            self.response.out.write(items)
+            return
+
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create/', FormCreate),
     ('/update/', FormUpdate),
     ('/delete/', FormDelete),
+    ('/search/', FormSearch),
 ], debug=True)

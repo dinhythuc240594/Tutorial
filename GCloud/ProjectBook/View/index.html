@@ -10,22 +10,6 @@
         <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
         <script type="text/javascript">
 
-            function initializeDialogNotication(info){
-                $('.dialog-notification').dialog({
-                    autoOpen: false,
-                    title: info,
-                    width: 50,
-                    height: 50,
-                    buttons:[
-                        {
-                            text: 'OK',
-                            click: function(){
-                                $(this).dialog('close');
-                            }
-                        }
-                    ]
-                });
-            }
 
             /*START FUNCTION FORMAT DATE TIME*/
             function formatDate(date){
@@ -138,11 +122,63 @@
             }
             /*END FUNCTION LOAD BOOK*/
 
+            /*START FUNCTION SEARCH*/
+            function SearchData(){
+                $('#search').on('submit', function(e){
+                    e.preventDefault();
+
+                    var key_word = $('#key_word').val();
+
+                    if(key_word == ''){
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/search/',
+                        data: {
+                            'data': 'json',
+                            'key_word': key_word
+                        },
+                        success: function(result){
+                            console.log(result);
+                            var html = '';
+                                html += '<table id="table-list">';
+                                    html += '<tr>';
+                                        html += '<th style="display:none;">Id</th>';
+                                        html += '<th>Name</th>';
+                                        html += '<th>Type</th>';
+                                        html += '<th>Date</th>';
+                                        html += '<th colspan="2">Action</th>';
+                                    html += '</tr>';
+                            for(var i = 0; i < result.length; i++) {
+                                    html += '<tr>';
+                                        html += '<td style="display:none;">' + result[i]['Id'] + '</td>';
+                                        html += '<td>' + result[i]['Name'] + '</td>';
+                                        html += '<td>' + result[i]['Type'] + '</td>';
+                                        html += '<td>' + formatDate(result[i]['Date']) + '</td>';
+                                        html += '<td><input name="dialog-update" class="dialog-update" type="button" value="Update"></td>';
+                                        html += '<td><input name="dialog-delete" class="dialog-delete" type="button" value="Delete"></td>';
+                                    html += '</tr>';
+                            }
+                                html += '</table>';
+                                $('#list').html(html);
+                        }
+                    });
+                });
+            }
+            /*END FUNCTION SEARCH*/
+
+
             $(document).ready(function(){
 
                 /*START LIST BOOK*/
                 load_data();
                 /*END LIST BOOK*/
+
+                /*START SEARCH BOOK*/
+                SearchData();
+                /*END SEARCH BOOK*/
 
                 /*START DIALOG CREATE BOOK*/
                 function initializeCreateDialog(){
@@ -310,6 +346,11 @@
         </script>
     </head>
     <body>
+        <form method="get" action="/" id="search">
+            <input type="text" id="key_word" value="" placeholder="Search Name Book"/>
+            <input type="submit" value="Search" />
+        </form>
+
         <div id="data-list">
             <div id="list"></div>
         </div>
@@ -335,7 +376,7 @@
         </div>
 
         <div class="dialogDelete" style="display: none;">
-            <form method="post" id="delete" action="/" class="form-common form-page" />
+            <form method="post" id="delete" action="/" class="form-common" />
                 <input type="text" value="" id="delete_book_id" name="Book_Id" placeholder="Book Id" disabled /><br/>
                 <input type="text" value="" id="delete_book_name" name="Book_Name" placeholder="Book Name" disabled /><br/>
                 <input type="text" value="" id="delete_book_type" name="Book_Type" placeholder="Book Type" disabled /><br/>

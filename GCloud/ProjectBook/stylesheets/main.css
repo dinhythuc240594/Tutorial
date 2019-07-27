@@ -39,6 +39,17 @@ body{
     height: 200px;
 }
 
+#search{
+    background-color: white;
+    padding: 4px;
+    margin: 2px;
+    width: 400px;
+}
+
+#key_word{
+    width:70%;
+}
+
 /*Input*/
 input[type=text]{
     padding: 10px 2px;
