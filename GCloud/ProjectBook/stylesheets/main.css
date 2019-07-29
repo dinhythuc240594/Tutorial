@@ -3,6 +3,28 @@ body{
     font-family: Verdana, Helvetica, sans-serif;
 }
 
+
+/*Header*/
+.top-nav{
+    overflow: hidden;
+}
+
+.top-nav div.top-header{
+    float: left;
+    display: block;
+    text-align: center;
+}
+
+.top-header{
+    padding: 6px;
+    margin: 8px;
+}
+
+.top-nav .search-container{
+    float: right;
+}
+
+
 /*Table*/
 #table-list{
     border-collapse: collapse;
@@ -30,6 +52,7 @@ body{
     color: white;
 }
 
+
 /*Form*/
 .form-common{
     background-color: white;
@@ -50,6 +73,11 @@ body{
     width:70%;
 }
 
+.back_button{
+    float: right;
+}
+
+
 /*Input*/
 input[type=text]{
     padding: 10px 2px;
@@ -66,7 +94,7 @@ input[type=text]:focus{
     border: 1px solid lightblue;
 }
 
-input[type=submit], input[type=button], a.pagination{
+input[type=submit], input[type=button], a.pagination, a.back_button{
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -82,8 +110,11 @@ input[type=submit]:hover, input[type=button]:hover, a.pagination:hover {
 }
 
 .pagination {
-    float: right;
+    float: left;
+    left: 100%;
 }
+
+
 /*Label*/
 label{
     display: inline-block;

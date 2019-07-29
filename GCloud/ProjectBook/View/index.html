@@ -162,6 +162,7 @@
                                     html += '</tr>';
                             }
                                 html += '</table>';
+                                html += '<a href="/" class="back_button" onclick="load_data()">Back</a>'
                                 $('#list').html(html);
                         }
                     });
@@ -342,14 +343,21 @@
 
             });
 
-				
+
         </script>
     </head>
     <body>
-        <form method="get" action="/" id="search">
-            <input type="text" id="key_word" value="" placeholder="Search Name Book"/>
-            <input type="submit" value="Search" />
-        </form>
+        <div class="top-nav">
+            <div class="top-header">
+                <input value="Create" type="button" id="dialog-create"/>
+            </div>
+            <div class="search-container">
+                <form method="get" action="/" id="search">
+                    <input type="text" id="key_word" value="" placeholder="Search Name Book"/>
+                    <input type="submit" value="Search" />
+                </form>
+            </div>
+        </div>
 
         <div id="data-list">
             <div id="list"></div>
@@ -363,7 +371,7 @@
                 <input type="submit" value="Create">
             </form>
         </div>
-        <input value="Create" type="button" id="dialog-create"/>
+
 
         <div class="dialogUpdate" style="display: none;">
             <form method="post" id="update" action="/" class="form-common" />
@@ -385,8 +393,5 @@
             </form>
         </div>
 
-        <div class="dialog-notification"></div>
-
     </body>
 </html>
-

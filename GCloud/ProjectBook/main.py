@@ -7,6 +7,7 @@ import json
 import logging
 from datetime import datetime
 import random
+import search
 
 
 class MainPage(webapp2.RequestHandler):
@@ -57,6 +58,10 @@ class FormCreate(webapp2.RequestHandler):
                         Name=book_name,
                         Type=book_type,
                         Date=datetime.strptime(book_date, "%Y-%m-%d"))
+
+            data = search.create_book(book)
+            search.add_book_to_index(data)
+
             book.put()
         else:
             book_name = self.request.get('book_name')
@@ -67,6 +72,10 @@ class FormCreate(webapp2.RequestHandler):
                         Name=book_name,
                         Type=book_type,
                         Date=datetime.strptime(book_date, "%Y-%m-%d"))
+
+            data = search.create_book(book)
+            search.add_book_to_index(data)
+
             book.put()
 
 
@@ -75,6 +84,7 @@ class FormUpdate(webapp2.RequestHandler):
         if self.request.get('update_book_id') != '':
             self.response.out.headers['Content-Type'] = 'text/json'
             book_id = self.request.get('update_book_id')
+
             json_data = json.dumps([book.to_dict() for book in Book.query(Book.Id==book_id).fetch()], default=str)
             self.response.out.write(json_data)
             return
@@ -91,6 +101,10 @@ class FormUpdate(webapp2.RequestHandler):
             book.Name = book_name
             book.Type = book_type
             book.Date = datetime.strptime(book_date, '%Y-%m-%d')
+
+            data = search.update_book_to_index(book)
+            logging.info(data)
+
             book.put()
 
 
@@ -107,6 +121,7 @@ class FormDelete(webapp2.RequestHandler):
         book_id = self.request.get('delete_book_id')
         book = Book.query(Book.Id == book_id).get()
         if book:
+            search.delete_index(book_id)
             book.key.delete()
 
 
@@ -114,15 +129,14 @@ class FormSearch(webapp2.RequestHandler):
     def get(self):
         if self.request.get('data') == 'json':
             self.response.headers['Content-Type'] = 'text/json'
+
             key_word = self.request.get('key_word')
-            data = Book.query(ndb.OR(Book.Name == key_word,
-                                     Book.Type == key_word))
+
+            data = search.search_items(key_word)
+
             logging.info(data)
 
-            items = json.dumps([book.to_dict() for book in data.fetch()], default=str)
-            logging.info(items)
-
-            self.response.out.write(items)
+            self.response.out.write(data)
             return
 
 
