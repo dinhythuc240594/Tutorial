@@ -1,0 +1,27 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+default_expiration: '5s'
+
+libraries:
+- name: jinja2
+  version: latest
+
+- name: webapp2
+  version: "2.5.2"
+
+- name: PIL
+  version: latest
+
+handlers:
+- url: /imgs
+  static_dir: imgs
+
+- url: /js
+  static_dir: js
+
+- url: /css
+  static_dir: css  
+
+- url: /.*
+  script: main.app

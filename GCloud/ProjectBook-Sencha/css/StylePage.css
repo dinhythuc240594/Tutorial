@@ -1,0 +1,57 @@
+/*fix size top bar*/
+.x-toolbar-left{
+    width: 50%;
+}
+
+/*design background color for grid view*/
+.x-toolbar{
+    border-color: gray;
+    background-color: white;
+    background-image: none;
+    border-radius: 5px;
+}
+
+/*fix size and design background color button create*/
+.x-toolbar-right-ct{
+    width: 100px;
+}
+
+#ext-comp-1007{
+    background-image: -webkit-linear-gradient(top, #707070 -50%, #FCFCFC 110.00000000000001%);
+    border-radius: 5px;
+    border-color: gray;
+}
+
+#form_create{
+    background-color: #99bbe8;
+}
+
+/*design color for form search*/
+.x-grid-panel .x-panel-mc .x-panel-body{
+    background-color: #99bbe8;
+    border-radius: 5px;
+    border-color: gray;
+}
+
+#key_word{
+    border-radius: 5px;
+    border-color: #99bbe8;
+}
+
+
+/*design background color button search*/
+#ext-comp-1017{
+    background-image: -webkit-linear-gradient(top, #707070 -50%, #FCFCFC 110.00000000000001%);
+    border-radius: 5px;
+    border-color: gray;
+}
+
+/*design background color for form update and delete*/
+#ext-gen11, #ext-gen51{
+    background-color: #99bbe8;
+}
+
+/*design image*/
+.x-action-col-icon, .x-action-col-0, .x-action-col-1{
+    border-radius: 50%;
+}
