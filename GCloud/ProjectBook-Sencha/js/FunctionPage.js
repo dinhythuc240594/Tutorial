@@ -3,7 +3,7 @@
 
 /*START FUNCTION LoadData*/
 
-function LoadData(button_create, dialog_update, dialog_delete, formsearch, key_word){
+function LoadData(buttonCreate, dialogUpdate, dialogDelete, formSearch, key_word){
 
     Ext.Ajax.request({
         url: '/',
@@ -80,7 +80,7 @@ function LoadData(button_create, dialog_update, dialog_delete, formsearch, key_w
                                     Ext.get('update_book_type').dom.value = jsonresponse[0]['Type'];
                                     Ext.get('update_book_date').dom.value = Ext.util.Format.date(jsonresponse[0]['Date'], 'd/m/Y');
 
-                                    dialog_update.show();
+                                    dialogUpdate.show();
                                 }
                             });
 
@@ -104,7 +104,7 @@ function LoadData(button_create, dialog_update, dialog_delete, formsearch, key_w
                                   Ext.get('delete_book_type').dom.value = jsonresponse[0]['Type'];
                                   Ext.get('delete_book_date').dom.value = Ext.util.Format.date(jsonresponse[0]['Date'], 'd/m/Y');
 
-                                  dialog_delete.show();
+                                  dialogDelete.show();
                               }
                           });
 
@@ -119,7 +119,7 @@ function LoadData(button_create, dialog_update, dialog_delete, formsearch, key_w
                 title: 'Book',
                 stateful: true,
                 stateId: 'grid',
-                tbar: [formsearch, '->', button_create],
+                tbar: [formSearch, '->', buttonCreate],
                 bbar: new Ext.PagingToolbar({
                     pageSize: 5,
                     store: store,
@@ -145,12 +145,13 @@ Ext.onReady(function(){
     Ext.QuickTips.init();
 
     //dialog create
-    var dialog_create = new Ext.Window({
+    var dialogCreate = new Ext.Window({
         title: 'Create Book',
         height: 170,
         width: 400,
         layout: 'fit',
         closeAction: 'hide',
+        modal: true,
         plain: true,
         items: new Ext.FormPanel({
                 formId:'form_create',
@@ -205,16 +206,16 @@ Ext.onReady(function(){
                                     Ext.get('book_date').dom.value = '';
 
                                     Ext.fly('grid_data').update(' ');
-                                    LoadData(button_create, dialog_update, dialog_delete, formsearch);
+                                    LoadData(buttonCreate, dialogUpdate, dialogDelete, formSearch);
                                 }
                             });
-                            dialog_create.hide();
+                            dialogCreate.hide();
                         }
                     },
                     {
                         text: 'Close',
                         handler: function(){
-                            dialog_create.hide();
+                            dialogCreate.hide();
                         }
                     }
                 ]
@@ -223,26 +224,27 @@ Ext.onReady(function(){
 
 
     // button create
-    var button_create = new Ext.Button({
+    var buttonCreate = new Ext.Button({
         text: 'Create',
         width: 90,
         height: 40,
         scale: 'large',
         handler: function(){
-            //Ext.get('button_create').on('click', function(){
-                dialog_create.show();
+            //Ext.get('buttonCreate').on('click', function(){
+                dialogCreate.show();
             //});
         }
     });
-    //button_create.render('button_create');
+    //buttonCreate.render('buttonCreate');
 
     //dialog update
-    var dialog_update = new Ext.Window({
+    var dialogUpdate = new Ext.Window({
         title: 'Update Book',
         height: 200,
         width: 400,
         layout: 'fit',
         closeAction: 'hide',
+        modal: true,
         plain: true,
         items: new Ext.FormPanel({
                 id:'form_update',
@@ -294,27 +296,28 @@ Ext.onReady(function(){
                                     window.location.reload();
                                 }
                             });
-                            dialog_update.hide();
+                            dialogUpdate.hide();
                         }
                     },
                     {
                         text: 'Close',
                         handler: function(){
-                            dialog_update.hide();
+                            dialogUpdate.hide();
                         }
                     }
                 ]
             })
     });
-    dialog_update.render('dialog_update');
+    dialogUpdate.render('dialog_update');
 
     //dialog delete
-    var dialog_delete = new Ext.Window({
+    var dialogDelete = new Ext.Window({
         title: 'Delete Book',
         height: 200,
         width: 400,
         layout: 'fit',
         closeAction: 'hide',
+        modal: true,
         plain: true,
         items: new Ext.FormPanel({
                 id:'form_delete',
@@ -352,21 +355,21 @@ Ext.onReady(function(){
                                     window.location.reload();
                                 }
                             });
-                            dialog_delete.hide();
+                            dialogDelete.hide();
                         }
                     },
                     {
                         text: 'Close',
                         handler: function(){
-                            dialog_delete.hide();
+                            dialogDelete.hide();
                         }
                     }
                 ]
             })
     });
-    dialog_delete.render('dialog_delete');
+    dialogDelete.render('dialog_delete');
 
-    var formsearch = new Ext.FormPanel({
+    var formSearch = new Ext.FormPanel({
                     id:'form_search',
                     xtype: 'searchfield',
                     bodyStyle: 'padding:5px 5px 0',
@@ -387,14 +390,14 @@ Ext.onReady(function(){
                                 return false;
                             }
                             Ext.fly('grid_data').update(' ');
-                            LoadData(button_create, dialog_update, dialog_delete, formsearch, key_word);
+                            LoadData(buttonCreate, dialogUpdate, dialogDelete, formSearch, key_word);
                          }
                         }
                     ]
                 })
 
 
-    LoadData(button_create, dialog_update, dialog_delete, formsearch);
+    LoadData(buttonCreate, dialogUpdate, dialogDelete, formSearch);
 });
 
 /* END */
